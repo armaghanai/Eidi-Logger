@@ -208,6 +208,8 @@ const initApp = async () => {
         notes: document.getElementById('notes').value
       };
 
+      buildStatus(status, 'Logging transaction...', false);
+
       const res = await fetch(`${API_BASE}/eidis`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -215,9 +217,11 @@ const initApp = async () => {
       });
 
       if (res.ok) {
-        buildStatus(status, 'Logged successfully', false);
+        buildStatus(status, 'Transaction added successfully!', false);
         e.target.reset();
         loadDashboard();
+        // Clear success message after 3 seconds
+        setTimeout(() => { if (status.textContent === 'Transaction added successfully!') status.textContent = ''; }, 3000);
       } else {
         buildStatus(status, 'Error logging data', true);
       }
