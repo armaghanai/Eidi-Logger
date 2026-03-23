@@ -191,6 +191,30 @@ app.get('/api/ai-comment', async (req, res) => {
   }
 });
 
+app.delete('/api/eidis/:id', async (req, res) => {
+  try {
+    const user = await getUserFromBearer(req);
+    if (!user) return res.status(401).json({ error: 'Unauthorized' });
+
+    const { id } = req.params;
+    const { error } = await supabase
+      .from('eidis')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', user.id);
+
+    if (error) {
+      console.error('Delete Error from Supabase:', error);
+      return res.status(500).json({ error: error.message });
+    }
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('Unhandled Server Exception in Delete:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Eidi Logger backend listening on http://localhost:${PORT}`);

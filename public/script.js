@@ -179,8 +179,33 @@ const loadDashboard = async () => {
           <td class="text-[var(--text-main)] font-semibold">${item.sender_name}</td>
           <td class="text-[var(--text-muted)] text-sm">${item.notes || '-'}</td>
           <td class="text-[var(--text-muted)] text-[10px] font-bold uppercase tracking-wider">${new Date(item.created_at).toLocaleDateString()}</td>
+          <td class="text-right">
+             <button class="delete-btn text-[var(--text-muted)] hover:text-red-500 transition-colors p-2 rounded hover:bg-red-500/10" data-id="${item.id}" aria-label="Delete transaction">
+                <svg class="w-4 h-4 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+             </button>
+          </td>
         </tr>
       `).join('');
+
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          if (!confirm('Are you sure you want to delete this transaction?')) return;
+          const id = e.currentTarget.getAttribute('data-id');
+          try {
+            const res = await fetch(`${API_BASE}/eidis/${id}`, {
+              method: 'DELETE',
+              headers: { Authorization: `Bearer ${token}` }
+            });
+            if (res.ok) {
+              loadDashboard();
+            } else {
+              alert('Failed to delete transaction.');
+            }
+          } catch (err) {
+            console.error('Delete error', err);
+          }
+        });
+      });
     }
   } catch (err) {
     console.error("Dashboard Load Error:", err);
