@@ -94,6 +94,24 @@ const renderChart = (rows, ctx) => {
   const received = rows.filter(x => x.type === 'received').reduce((s, x) => s + x.amount, 0);
   const sent = rows.filter(x => x.type === 'sent').reduce((s, x) => s + x.amount, 0);
 
+  const container = ctx.canvas.parentElement;
+  if (received === 0 && sent === 0) {
+    if (window.eidiChart) window.eidiChart.destroy();
+    ctx.canvas.style.display = 'none';
+    let emptyMsg = container.querySelector('.chart-empty');
+    if (!emptyMsg) {
+      emptyMsg = document.createElement('div');
+      emptyMsg.className = 'chart-empty absolute inset-0 flex items-center justify-center text-center text-sm font-bold text-[var(--primary)] opacity-60 p-4';
+      emptyMsg.innerHTML = 'Add your first transaction<br/>to display visual chart.';
+      container.appendChild(emptyMsg);
+    }
+    return;
+  }
+
+  ctx.canvas.style.display = 'block';
+  const emptyMsg = container.querySelector('.chart-empty');
+  if (emptyMsg) emptyMsg.remove();
+
   if (window.eidiChart) window.eidiChart.destroy();
 
   window.eidiChart = new Chart(ctx, {
