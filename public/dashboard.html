@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Eidi Logger</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="relative min-h-screen pb-12">
+  <header class="max-w-[1280px] mx-auto p-6 md:p-8 flex justify-between items-center gap-4 z-10 relative">
+    <div class="flex-1">
+      <h1 class="text-3xl font-extrabold tracking-tight brand-font text-gradient mb-1">Overview</h1>
+      <p class="text-[var(--text-muted)] text-[11px] font-bold tracking-[0.2em] uppercase">Encrypted Dashboard</p>
+    </div>
+    <div class="flex items-center gap-4">
+      <button id="themeToggle" class="btn btn-ghost !p-3 !rounded-full !w-12 !h-12 flex items-center justify-center text-xl transition-transform hover:rotate-12 hidden"></button>
+      <button id="signOut" class="btn btn-ghost px-5 py-2.5 text-sm">Sign out</button>
+    </div>
+  </header>
+
+  <main class="dashboard-grid relative z-10">
+    
+    <!-- Log Form Panel -->
+    <section class="glass-card panel-side space-y-6 animate-reveal delay-100 flex flex-col justify-center">
+      <div class="flex items-center gap-3 mb-2">
+         <div class="w-10 h-10 rounded-[12px] bg-[var(--primary-glow)] flex items-center justify-center text-[var(--primary)] text-lg font-extrabold shadow-inner border border-[var(--primary)] border-opacity-30">
+            +
+         </div>
+         <h2 class="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--text-muted)]">New Entry</h2>
+      </div>
+      
+      <form id="logForm" class="space-y-4">
+        <div class="relative">
+          <select id="entryType" class="w-full font-semibold cursor-pointer appearance-none" required>
+            <option value="received">↓ Received Eidi</option>
+            <option value="sent">↑ Sent Eidi</option>
+          </select>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-[var(--text-muted)]">
+            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+          </div>
+        </div>
+        <div class="relative">
+           <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] font-extrabold">Rs.</span>
+           <input id="amount" type="number" placeholder="Amount" class="pl-14 font-bold text-lg" required />
+        </div>
+        <input id="name" type="text" placeholder="Sender / Recipient Name" class="font-medium" required />
+        <textarea id="notes" placeholder="Optional notes or message..." rows="2" class="resize-none font-medium"></textarea>
+        <button type="submit" class="btn w-full mt-2 py-4 text-[1.05rem]">Record Transaction</button>
+      </form>
+      <div class="h-5">
+        <p id="logStatus" class="status text-sm font-semibold text-center"></p>
+      </div>
+    </section>
+
+    <!-- Stats & Chart Panel -->
+    <section class="glass-card panel-main flex flex-col justify-between animate-reveal delay-200 p-0 border-0 bg-transparent shadow-none backdrop-filter-none">
+      
+      <!-- Stats Row -->
+      <div id="summaryCards" class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-6">
+         <!-- Injected by JS -->
+      </div>
+      
+      <!-- Chart and AI Block -->
+      <div class="flex-1 flex flex-col md:flex-row gap-6">
+        
+        <div class="glass-card flex-1 flex items-center justify-center relative min-h-[250px]">
+          <div class="w-full max-w-[200px] relative z-10">
+            <canvas id="breakdownChart"></canvas>
+          </div>
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-[var(--primary)] blur-[80px] opacity-30 rounded-full pointer-events-none"></div>
+        </div>
+        
+        <!-- AI Panel inside main block -->
+        <div class="flex-1 glass-card !bg-[var(--primary-glow)] !border-[var(--primary)] !border-opacity-30 relative overflow-hidden flex flex-col justify-center">
+          <div class="absolute top-0 right-0 w-48 h-48 bg-[var(--primary)] blur-[60px] opacity-30 -mr-16 -mt-16 rounded-full pointer-events-none"></div>
+          <div class="flex flex-col items-start gap-4 relative z-10 p-2">
+            <div class="w-12 h-12 flex-shrink-0 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-2xl text-sm font-extrabold flex items-center justify-center shadow-lg shadow-indigo-500/40 relative overflow-hidden">
+                <div class="absolute inset-0 bg-white/20 mix-blend-overlay"></div>
+                AI
+            </div>
+            <div>
+              <h2 class="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--primary)] opacity-90 mb-3">Financial Insight</h2>
+              <p id="aiComment" class="text-xl text-[var(--text-main)] leading-relaxed font-semibold">Analyzing your spending habits securely...</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- History Panel -->
+    <section class="glass-card panel-full animate-reveal delay-300 mt-2">
+      <div class="flex items-center justify-between mb-8 px-2">
+        <h2 class="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--text-muted)]">Log History</h2>
+        <span class="text-[10px] bg-[var(--card-border)] px-3 py-1.5 rounded-full font-bold uppercase tracking-wider text-[var(--text-muted)]">End-to-End Encrypted</span>
+      </div>
+      <div class="table-container pb-2">
+        <table id="logTable" class="table">
+          <thead>
+            <tr><th>Flow</th><th>Amount (PKR)</th><th>Name</th><th>Notes</th><th>Date</th></tr>
+          </thead>
+          <tbody class="font-medium"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Global Theme Switch -->
+  <button id="themeToggleGlobal" class="theme-switch" aria-label="Toggle dark/light theme">🌙</button>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
