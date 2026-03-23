@@ -162,6 +162,20 @@ app.get('/api/ai-comment', async (req, res) => {
   }
 
   try {
+    const { data: recentTransactions } = await supabase
+      .from('eidis')
+      .select('type, amount, sender_name, notes, created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    let historyContext = "";
+    if (recentTransactions && recentTransactions.length > 0) {
+      historyContext = "\nRecent Transactions:\n" + recentTransactions.map(t => 
+         `- ${t.type.toUpperCase()} ${t.amount} PKR (Name: ${t.sender_name}, Notes: ${t.notes || 'none'})`
+      ).join('\n');
+    }
+
     const prompt = `You are a friendly assistant analyzing Eidi statistics.
 User stats:
 - received: ${totalReceived} PKR
@@ -169,8 +183,9 @@ User stats:
 - received entries: ${countReceived}
 - sent entries: ${countSent}
 - balance: ${balance} PKR
+${historyContext}
 
-Provide a short motivational comment and one tip about sharing and saving with Pakistani cultural context. Keep it under 100 words.`;
+Provide a short motivational analysis that specifically mentions any interesting recent transactions, and one tip about sharing and saving with Pakistani cultural context. Keep it under 100 words.`;
 
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
       method: 'POST',
@@ -194,6 +209,14 @@ Provide a short motivational comment and one tip about sharing and saving with P
     });
 
     const data = await response.json();
+
+    if (!response.ok) {
+       if (response.status === 429) {
+          return res.status(429).json({ error: 'Quota Exceeded' });
+       }
+       console.error('Gemini Failed:', data);
+       return res.json({ comment: `${summary}\n\n(AI generation currently unavailable due to API constraints)` });
+    }
 
     const comment =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||

@@ -19,3 +19,6 @@ Thumbs.db
 
 # Vercel
 .vercel/
+
+# Gemini API Testing 
+test-gemini.js

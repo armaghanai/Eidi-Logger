@@ -191,13 +191,15 @@ body::after {
 
 /* Inputs & Forms */
 input, select, textarea {
-  background: rgba(0, 0, 0, 0.15);
+  background: var(--card-bg);
   border: 1px solid var(--card-border);
   color: var(--text-main);
   border-radius: 12px;
-  padding: 1rem;
+  padding: 1.15rem 1rem;
   font-family: inherit;
   font-size: 0.95rem;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
   width: 100%;
   transition: all 0.2s ease;
   outline: none;
