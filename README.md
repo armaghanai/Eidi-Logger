@@ -1,75 +1,44 @@
-# Eidi Logger
+# Eidi Logger ✨
 
-Modern glassmorphic eidi logging web app.
+A sleek, full-stack, end-to-end encrypted financial tracker designed to log Eidi (gifted money) with automated AI-driven financial insights.
 
-## Stack
-- Frontend: HTML/CSS/JS
-- Backend: Node.js + Express
-- Database: Supabase (PostgreSQL + Auth)
-- Charts: Chart.js
-- AI comments: OpenAI (optional)
+Built with **Vanilla JS**, **Tailwind CSS**, **Node.js (Express)**, **Supabase**, and **Google Gemini AI**.
 
-## Setup
+---
 
-1. Clone repository
-2. Install backend dependencies:
+## 🌟 Features
+- **Premium UI/UX:** Stunning dark/light mode glassmorphism interface powered by Tailwind CSS and Chart.js.
+- **Secure Authentication:** Standard Email & Password authentication powered by Supabase Auth protocols.
+- **Transaction History:** Instantly add or delete entries. Balance, total received, and total sent metrics recalculate on the fly.
+- **AI Financial Insights:** Generates personalized financial tips based on your logged Eidi amounts utilizing the blazing fast **Gemini 2.0 Flash** model.
+- **Serverless Ready:** Pre-configured `vercel.json` for instant 1-click deployment on Vercel's global edge network.
 
+## 🚀 Quick Start (Local Development)
+
+### 1. Configure Environment
+Create a `.env` file in your root directory and populate it with your keys:
+```env
+SUPABASE_URL=https://your-project-url.supabase.co
+SUPABASE_ANNON_KEY=your-anon-key
+GEMINI_API_KEY=your-google-ai-studio-key
+PORT=4000
+```
+
+### 2. Install Dependencies
 ```bash
-cd d:\MyProjects\EidiLogger
-npm install
+npm install express cors dotenv @supabase/supabase-js
 ```
 
-3. Copy environment config:
-
+### 3. Run the Backend & Frontend
+The backend Express app serves the frontend statically. Simply run:
 ```bash
-copy .env.example .env
+node server.js
 ```
+Open `http://localhost:4000` in your browser. You will be instantly routed to the secure authentication portal.
 
-4. Set variables in `.env`:
-  - `SUPABASE_URL`
-  - `SUPABASE_SERVICE_KEY` (service_role key)
-  - `OPENAI_API_KEY` (optional) 
-
-5. Create Supabase schema:
-
-```sql
-create table if not exists eidis (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null,
-  type text not null check (type in ('received','sent')),
-  amount numeric not null,
-  sender_name text,
-  notes text,
-  created_at timestamp with time zone default timezone('utc', now())
-);
-
-create index on eidis (user_id);
-```
-
-6. (Optional) Supabase policy:
-
-```sql
-create policy "Users can manage own eidis"
-  on eidis
-  for all
-  using (auth.uid() = user_id);
-```
-
-7. Add client keys to frontend files:
-  - `public/login.html`
-  - `public/dashboard.html`
-
-8. Run backend
-
-```bash
-npm run dev
-```
-
-9. Serve frontend e.g. with `live-server` or built-in VSCode server.
-
-## Usage
-- Login with email enters Supabase magic link.
-- Dashboard logs entries & shows charts.
-- AI comments from OpenAI powered endpoint.
-
-> Note: this is a logging app (not a payment gateway).
+## 🌐 Deploying to Vercel
+This project is configured out-of-the-box for Vercel. 
+1. Install the Vercel CLI: `npm i -g vercel`
+2. Run `vercel` in your terminal.
+3. Once prompted, add your `.env` variables to your Vercel Project Settings online. 
+4. Traffic is automatically routed natively: frontend static assets serve from Vercel Edge, while `/api/*` proxies into your serverless Node.js lambda functions.

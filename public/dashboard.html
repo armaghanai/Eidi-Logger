@@ -75,14 +75,17 @@
         <!-- AI Panel inside main block -->
         <div class="flex-1 glass-card !bg-[var(--primary-glow)] !border-[var(--primary)] !border-opacity-30 relative overflow-hidden flex flex-col justify-center">
           <div class="absolute top-0 right-0 w-48 h-48 bg-[var(--primary)] blur-[60px] opacity-30 -mr-16 -mt-16 rounded-full pointer-events-none"></div>
-          <div class="flex flex-col items-start gap-4 relative z-10 p-2">
-            <div class="w-12 h-12 flex-shrink-0 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-2xl text-sm font-extrabold flex items-center justify-center shadow-lg shadow-indigo-500/40 relative overflow-hidden">
-                <div class="absolute inset-0 bg-white/20 mix-blend-overlay"></div>
-                AI
+          <div class="flex flex-col items-start gap-4 relative z-10 p-2 w-full">
+            <div class="flex items-center justify-between w-full">
+              <div class="w-12 h-12 flex-shrink-0 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-2xl text-sm font-extrabold flex items-center justify-center shadow-lg shadow-indigo-500/40 relative overflow-hidden">
+                  <div class="absolute inset-0 bg-white/20 mix-blend-overlay"></div>
+                  AI
+              </div>
+              <button id="getInsightBtn" class="btn text-xs py-2 px-4 shadow-md hover:scale-105 transition-transform"><span class="mr-1">✨</span> Analyze</button>
             </div>
-            <div>
+            <div class="w-full">
               <h2 class="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--primary)] opacity-90 mb-3">Financial Insight</h2>
-              <p id="aiComment" class="text-xl text-[var(--text-main)] leading-relaxed font-semibold">Analyzing your spending habits securely...</p>
+              <p id="aiComment" class="text-[15px] sm:text-[17px] text-[var(--text-main)] leading-relaxed font-semibold opacity-90">Ready to analyze your spending.</p>
             </div>
           </div>
         </div>

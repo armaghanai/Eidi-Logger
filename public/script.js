@@ -166,22 +166,12 @@ const loadDashboard = async () => {
   }
 
   try {
-    const [entriesRes, aiRes] = await Promise.all([
-      fetch(`${API_BASE}/eidis`, { headers: { Authorization: `Bearer ${token}` } }),
-      fetch(`${API_BASE}/ai-comment`, { headers: { Authorization: `Bearer ${token}` } }),
-    ]);
-
+    const entriesRes = await fetch(`${API_BASE}/eidis`, { headers: { Authorization: `Bearer ${token}` } });
     const entriesPayload = await entriesRes.json();
     lastData = entriesPayload.data || []; // Update global store
 
     renderStats(lastData, document.getElementById('summaryCards'));
     renderChart(lastData, document.getElementById('breakdownChart')?.getContext('2d'));
-
-    const aiComment = document.getElementById('aiComment');
-    if (aiComment) {
-      const aiPayload = await aiRes.json().catch(() => ({ comment: 'AI insight currently unavailable.' }));
-      aiComment.textContent = aiPayload.comment;
-    }
 
     // History table
     const tbody = document.querySelector('#logTable tbody');
@@ -276,6 +266,34 @@ const initApp = async () => {
       await supabase.auth.signOut();
       window.location.href = 'index.html';
     });
+
+    document.getElementById('getInsightBtn')?.addEventListener('click', async () => {
+      const btn = document.getElementById('getInsightBtn');
+      const aiComment = document.getElementById('aiComment');
+      const token = await getToken();
+      if (!token || !aiComment) return;
+
+      btn.disabled = true;
+      btn.innerHTML = `<span class="inline-block mr-1 animate-spin">⌛</span> Analyzing...`;
+      aiComment.textContent = 'Generating insights securely using Gemini AI...';
+
+      try {
+        const aiRes = await fetch(`${API_BASE}/ai-comment`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } });
+        
+        if (aiRes.status === 429) {
+           aiComment.textContent = 'Too many requests. Please wait a minute and try again later.';
+        } else {
+           const aiPayload = await aiRes.json().catch(() => ({ comment: 'AI insight failed to load.' }));
+           aiComment.textContent = aiPayload.comment || 'Error loading insight.';
+        }
+      } catch (err) {
+        aiComment.textContent = 'Network error fetching insight. Try again later.';
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span class="mr-1">✨</span> Analyze`;
+      }
+    });
+
   }
 
   if (window.location.pathname.includes('index.html') || window.location.pathname === '/' || window.location.pathname === '') {
