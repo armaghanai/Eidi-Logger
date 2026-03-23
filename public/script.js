@@ -216,6 +216,8 @@ const initApp = async () => {
         body: JSON.stringify(body)
       });
 
+
+
       if (res.ok) {
         buildStatus(status, 'Transaction added successfully!', false);
         e.target.reset();
@@ -248,15 +250,15 @@ const initApp = async () => {
     const handleAuth = async (isSignUp) => {
       const email = document.getElementById('email')?.value?.trim();
       const password = document.getElementById('password')?.value;
-      
+
       if (!email || !password) {
         buildStatus(status, 'Please enter both email and password.', true);
         return;
       }
 
       buildStatus(status, isSignUp ? 'Creating account...' : 'Logging in...', false);
-      
-      const { data, error } = isSignUp 
+
+      const { data, error } = isSignUp
         ? await supabase.auth.signUp({ email, password })
         : await supabase.auth.signInWithPassword({ email, password });
 
@@ -264,12 +266,12 @@ const initApp = async () => {
         buildStatus(status, `Error: ${error.message}`, true);
       } else {
         if (isSignUp && data?.user?.identities?.length === 0) {
-           buildStatus(status, 'This account already exists. Please log in instead.', true);
+          buildStatus(status, 'This account already exists. Please log in instead.', true);
         } else if (isSignUp) {
-           buildStatus(status, 'Account created! If email confirmation is enabled on Supabase, check your inbox. Otherwise, log in now.', false);
+          buildStatus(status, 'Account created! If email confirmation is enabled on Supabase, check your inbox. Otherwise, log in now.', false);
         } else {
-           buildStatus(status, 'Success! Redirecting to dashboard...', false);
-           setTimeout(() => { window.location.href = 'dashboard.html'; }, 500);
+          buildStatus(status, 'Success! Redirecting to dashboard...', false);
+          setTimeout(() => { window.location.href = 'dashboard.html'; }, 500);
         }
       }
     };
@@ -283,9 +285,9 @@ const initApp = async () => {
       e.preventDefault();
       // Use native HTML5 validate check to ensure fields are filled before attempting sign up
       if (form.checkValidity()) {
-         handleAuth(true);
+        handleAuth(true);
       } else {
-         form.reportValidity();
+        form.reportValidity();
       }
     });
   }

@@ -80,7 +80,7 @@ app.post('/api/eidis', async (req, res) => {
       sender_name: sender_name || '',
       notes: notes || '',
     },
-  ]);
+  ]).select();
 
   if (error) {
     return res.status(500).json({ error: error.message });
