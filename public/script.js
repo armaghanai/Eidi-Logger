@@ -232,6 +232,7 @@ const initApp = async () => {
   if (window.location.pathname.includes('index.html') || window.location.pathname === '/' || window.location.pathname === '') {
     const form = document.getElementById('loginForm');
     const status = document.getElementById('status');
+    const signUpBtn = document.getElementById('signUpBtn');
 
     // If already signed in, redirect
     const token = await getToken();
@@ -240,24 +241,47 @@ const initApp = async () => {
       return;
     }
 
-    form?.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    const handleAuth = async (isSignUp) => {
       const email = document.getElementById('email')?.value?.trim();
-      if (!email) {
-        buildStatus(status, 'Please enter a valid email.', true);
+      const password = document.getElementById('password')?.value;
+      
+      if (!email || !password) {
+        buildStatus(status, 'Please enter both email and password.', true);
         return;
       }
 
-      buildStatus(status, 'Sending magic link...', false);
-      const { error } = await supabase.auth.signInWithOtp({
-        email,
-        options: { emailRedirectTo: window.location.origin + '/dashboard.html' }
-      });
+      buildStatus(status, isSignUp ? 'Creating account...' : 'Logging in...', false);
+      
+      const { data, error } = isSignUp 
+        ? await supabase.auth.signUp({ email, password })
+        : await supabase.auth.signInWithPassword({ email, password });
 
       if (error) {
         buildStatus(status, `Error: ${error.message}`, true);
       } else {
-        buildStatus(status, 'Magic link sent! Please check your email inbox to log in. You will be redirected after clicking the link.', false);
+        if (isSignUp && data?.user?.identities?.length === 0) {
+           buildStatus(status, 'This account already exists. Please log in instead.', true);
+        } else if (isSignUp) {
+           buildStatus(status, 'Account created! If email confirmation is enabled on Supabase, check your inbox. Otherwise, log in now.', false);
+        } else {
+           buildStatus(status, 'Success! Redirecting to dashboard...', false);
+           setTimeout(() => { window.location.href = 'dashboard.html'; }, 500);
+        }
+      }
+    };
+
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      handleAuth(false);
+    });
+
+    signUpBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      // Use native HTML5 validate check to ensure fields are filled before attempting sign up
+      if (form.checkValidity()) {
+         handleAuth(true);
+      } else {
+         form.reportValidity();
       }
     });
   }
