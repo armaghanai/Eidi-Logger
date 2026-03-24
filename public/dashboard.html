@@ -14,9 +14,10 @@
       <h1 class="text-3xl font-extrabold tracking-tight brand-font text-gradient mb-1">Overview</h1>
       <p class="text-[var(--text-muted)] text-[11px] font-bold tracking-[0.2em] uppercase">Encrypted Dashboard</p>
     </div>
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-3 sm:gap-4">
       <button id="themeToggle" class="btn btn-ghost !p-3 !rounded-full !w-12 !h-12 flex items-center justify-center text-xl transition-transform hover:rotate-12 hidden"></button>
-      <button id="signOut" class="btn btn-ghost px-5 py-2.5 text-sm">Sign out</button>
+      <button id="signOut" class="btn btn-ghost px-4 sm:px-5 py-2.5 text-sm">Sign out</button>
+      <button id="deleteAccountBtn" class="btn bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 px-3 sm:px-4 py-2.5 text-sm font-bold shadow-none transition-colors">Delete Account</button>
     </div>
   </header>
 
@@ -65,29 +66,12 @@
       <!-- Chart and AI Block -->
       <div class="flex-1 flex flex-col md:flex-row gap-6">
         
-        <div class="glass-card flex-1 flex items-center justify-center relative min-h-[250px]">
-          <div class="w-full max-w-[200px] relative z-10">
+        <div class="glass-card flex-1 flex flex-col items-center justify-center relative min-h-[300px] w-full p-8">
+          <h2 class="absolute top-6 left-6 text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--text-muted)]">Balance Breakdown</h2>
+          <div class="w-full max-w-[280px] sm:max-w-[320px] relative z-10">
             <canvas id="breakdownChart"></canvas>
           </div>
-          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-[var(--primary)] blur-[80px] opacity-30 rounded-full pointer-events-none"></div>
-        </div>
-        
-        <!-- AI Panel inside main block -->
-        <div class="flex-1 glass-card !bg-[var(--primary-glow)] !border-[var(--primary)] !border-opacity-30 relative overflow-hidden flex flex-col justify-center">
-          <div class="absolute top-0 right-0 w-48 h-48 bg-[var(--primary)] blur-[60px] opacity-30 -mr-16 -mt-16 rounded-full pointer-events-none"></div>
-          <div class="flex flex-col items-start gap-4 relative z-10 p-2 w-full">
-            <div class="flex items-center justify-between w-full">
-              <div class="w-12 h-12 flex-shrink-0 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-2xl text-sm font-extrabold flex items-center justify-center shadow-lg shadow-indigo-500/40 relative overflow-hidden">
-                  <div class="absolute inset-0 bg-white/20 mix-blend-overlay"></div>
-                  AI
-              </div>
-              <button id="getInsightBtn" class="btn text-xs py-2 px-4 shadow-md hover:scale-105 transition-transform"><span class="mr-1">✨</span> Analyze</button>
-            </div>
-            <div class="w-full">
-              <h2 class="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--primary)] opacity-90 mb-3">Financial Insight</h2>
-              <p id="aiComment" class="text-[15px] sm:text-[17px] text-[var(--text-main)] leading-relaxed font-semibold opacity-90">Ready to analyze your spending.</p>
-            </div>
-          </div>
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[var(--primary)] blur-[100px] opacity-20 rounded-full pointer-events-none"></div>
         </div>
 
       </div>

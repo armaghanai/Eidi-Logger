@@ -120,15 +120,36 @@ const renderChart = (rows, ctx) => {
       labels: ['Received', 'Sent'],
       datasets: [{
         data: [received, sent],
-        backgroundColor: [isDark ? '#8b5cf6' : '#4f46e5', isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'],
-        borderColor: [isDark ? 'rgba(139, 92, 246, 0.5)' : '#4f46e5', 'transparent'],
-        borderWidth: 1,
-        hoverOffset: 15
+        backgroundColor: ['#10b981', '#f43f5e'],
+        borderColor: [isDark ? '#020617' : '#ffffff', isDark ? '#020617' : '#ffffff'],
+        borderWidth: 4,
+        borderRadius: 4,
+        hoverOffset: 20
       }],
     },
     options: {
-      cutout: '85%',
-      plugins: { legend: { display: false } },
+      cutout: '75%',
+      layout: { padding: 10 },
+      plugins: { 
+        legend: { 
+          display: true, 
+          position: 'bottom',
+          labels: { color: isDark ? '#f8fafc' : '#0f172a', font: { family: 'Outfit', size: 13, weight: 'bold' }, padding: 20, usePointStyle: true, pointStyle: 'circle' }
+        },
+        tooltip: {
+          backgroundColor: isDark ? 'rgba(30, 41, 59, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+          titleColor: isDark ? '#f8fafc' : '#0f172a',
+          bodyColor: isDark ? '#94a3b8' : '#64748b',
+          borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+          borderWidth: 1,
+          padding: 12,
+          boxPadding: 6,
+          usePointStyle: true,
+          callbacks: {
+            label: function(context) { return ' PKR ' + context.parsed.toLocaleString(); }
+          }
+        }
+      },
       animation: { animateScale: true }
     },
   });
@@ -267,30 +288,34 @@ const initApp = async () => {
       window.location.href = 'index.html';
     });
 
-    document.getElementById('getInsightBtn')?.addEventListener('click', async () => {
-      const btn = document.getElementById('getInsightBtn');
-      const aiComment = document.getElementById('aiComment');
+    document.getElementById('deleteAccountBtn')?.addEventListener('click', async () => {
+      const confirmed = confirm('DANGER: Are you absolutely sure you want to permanently delete your account and ALL your transaction data? This cannot be undone.');
+      if (!confirmed) return;
+      
       const token = await getToken();
-      if (!token || !aiComment) return;
-
+      if (!token) return;
+      
+      const btn = document.getElementById('deleteAccountBtn');
+      const originalText = btn.textContent;
+      btn.textContent = 'Deleting...';
       btn.disabled = true;
-      btn.innerHTML = `<span class="inline-block mr-1 animate-spin">⌛</span> Analyzing...`;
-      aiComment.textContent = 'Generating insights securely using Gemini AI...';
-
+      
       try {
-        const aiRes = await fetch(`${API_BASE}/ai-comment`, { headers: { Authorization: `Bearer ${token}` } });
-        
-        if (aiRes.status === 429) {
-           aiComment.textContent = 'Too many requests. Please wait a minute and try again later.';
+        const res = await fetch(`${API_BASE}/account`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+        if (res.ok) {
+          alert('Your account and all associated data have been permanently deleted.');
+          await supabase.auth.signOut();
+          window.location.href = 'index.html';
         } else {
-           const aiPayload = await aiRes.json().catch(() => ({ comment: 'AI insight failed to load.' }));
-           aiComment.textContent = aiPayload.comment || 'Error loading insight.';
+          const err = await res.json();
+          alert(`Failed to delete account: ${err.error || 'Server error'}`);
+          btn.textContent = originalText;
+          btn.disabled = false;
         }
-      } catch (err) {
-        aiComment.textContent = 'Network error fetching insight. Try again later.';
-      } finally {
+      } catch (e) {
+        alert('Network error while deleting account.');
+        btn.textContent = originalText;
         btn.disabled = false;
-        btn.innerHTML = `<span class="mr-1">✨</span> Analyze`;
       }
     });
 
