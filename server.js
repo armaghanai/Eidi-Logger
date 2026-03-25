@@ -48,7 +48,8 @@ app.get('/api/eidis', async (req, res) => {
   const user = await getUserFromBearer(req);
   if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
-  const { data, error } = await supabase
+  const fetchClient = supabaseAdmin || supabase;
+  const { data, error } = await fetchClient
     .from('eidis')
     .select('*')
     .eq('user_id', user.id)
@@ -69,11 +70,14 @@ app.post('/api/eidis', async (req, res) => {
   if (!['received', 'sent'].includes(type)) {
     return res.status(400).json({ error: 'type must be received or sent' });
   }
-  if (!amount || isNaN(Number(amount))) {
+  if (amount === undefined || amount === null || isNaN(Number(amount))) {
     return res.status(400).json({ error: 'amount is required and must be a number' });
   }
 
-  const { data, error } = await supabase.from('eidis').insert([
+  // Use service client if available to bypass RLS, otherwise fall back to regular client
+  const client = supabaseAdmin || supabase;
+  
+  const { data, error } = await client.from('eidis').insert([
     {
       user_id: user.id,
       type,
@@ -94,15 +98,17 @@ app.get('/api/stats', async (req, res) => {
   const user = await getUserFromBearer(req);
   if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
-  const received = await supabase
+  const statsClient = supabaseAdmin || supabase;
+
+  const received = await statsClient
     .from('eidis')
-    .select('amount', { count: 'exact' })
+    .select('amount')
     .eq('user_id', user.id)
     .eq('type', 'received');
 
-  const sent = await supabase
+  const sent = await statsClient
     .from('eidis')
-    .select('amount', { count: 'exact' })
+    .select('amount')
     .eq('user_id', user.id)
     .eq('type', 'sent');
 
@@ -134,7 +140,8 @@ app.delete('/api/account', async (req, res) => {
     }
 
     // 1. Delete all transactions
-    const { error: dataError } = await supabase.from('eidis').delete().eq('user_id', user.id);
+    const dataClient = supabaseAdmin || supabase;
+    const { error: dataError } = await dataClient.from('eidis').delete().eq('user_id', user.id);
     if (dataError) {
       console.error('Failed to delete eidis data:', dataError);
       return res.status(500).json({ error: 'Failed to delete user logs.' });
@@ -160,7 +167,8 @@ app.delete('/api/eidis/:id', async (req, res) => {
     if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
     const { id } = req.params;
-    const { error } = await supabase
+    const deleteClient = supabaseAdmin || supabase;
+    const { error } = await deleteClient
       .from('eidis')
       .delete()
       .eq('id', id)

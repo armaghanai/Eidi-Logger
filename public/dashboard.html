@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,30 +16,41 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="relative min-h-screen pb-12">
-  <header class="max-w-[1280px] mx-auto p-6 md:p-8 flex justify-between items-center gap-4 z-10 relative">
+  <div class="aurora-bg">
+    <div class="blob"></div>
+    <div class="blob" style="animation-delay: -5s; right: -10%; background: var(--accent);"></div>
+    <div class="blob" style="animation-delay: -10s; bottom: -20%; left: 20%; background: #ec4899;"></div>
+  </div>
+
+  <header class="max-w-[1360px] mx-auto p-8 md:p-10 flex justify-between items-center gap-4 z-10 relative">
     <div class="flex-1">
       <h1 class="text-3xl font-extrabold tracking-tight brand-font text-gradient mb-1">Overview</h1>
       <p class="text-[var(--text-muted)] text-[11px] font-bold tracking-[0.2em] uppercase">Encrypted Dashboard</p>
     </div>
     <div class="flex items-center gap-3 sm:gap-4">
-      <button id="themeToggle" class="btn btn-ghost !p-3 !rounded-full !w-12 !h-12 flex items-center justify-center text-xl transition-transform hover:rotate-12 hidden"></button>
+      <button id="themeToggle"
+        class="btn btn-ghost !p-3 !rounded-full !w-12 !h-12 flex items-center justify-center text-xl transition-transform hover:rotate-12 hidden"></button>
       <button id="signOut" class="btn btn-ghost px-4 sm:px-5 py-2.5 text-sm">Sign out</button>
-      <button id="deleteAccountBtn" class="btn bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 px-3 sm:px-4 py-2.5 text-sm font-bold shadow-none transition-colors">Delete Account</button>
+      <button id="deleteAccountBtn"
+        class="btn bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 px-3 sm:px-4 py-2.5 text-sm font-bold shadow-none transition-colors">Delete
+        Account</button>
     </div>
   </header>
 
   <main class="dashboard-grid relative z-10">
-    
+
     <!-- Log Form Panel -->
-    <section class="glass-card panel-side space-y-6 animate-reveal delay-100 flex flex-col justify-center">
+    <section class="glass-card panel-side space-y-6 animate-reveal delay-100 flex flex-col">
       <div class="flex items-center gap-3 mb-2">
-         <div class="w-10 h-10 rounded-[12px] bg-[var(--primary-glow)] flex items-center justify-center text-[var(--primary)] text-lg font-extrabold shadow-inner border border-[var(--primary)] border-opacity-30">
-            +
-         </div>
-         <h2 class="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--text-muted)]">New Entry</h2>
+        <div
+          class="w-10 h-10 rounded-[12px] bg-[var(--primary-glow)] flex items-center justify-center text-[var(--primary)] text-lg font-extrabold shadow-inner border border-[var(--primary)] border-opacity-30">
+          +
+        </div>
+        <h2 class="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--text-muted)]">New Entry</h2>
       </div>
-      
+
       <form id="logForm" class="space-y-5">
         <div class="relative">
           <select id="entryType" class="w-full font-semibold cursor-pointer appearance-none" required>
@@ -46,15 +58,18 @@
             <option value="sent">↑ Sent Eidi</option>
           </select>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-[var(--text-muted)]">
-            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+            </svg>
           </div>
         </div>
         <div class="relative">
-           <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] font-extrabold">Rs.</span>
-           <input id="amount" type="number" placeholder="Amount" class="pl-14 font-bold text-lg" required />
+          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] font-extrabold">Rs.</span>
+          <input id="amount" type="number" placeholder="Amount" class="pl-14 font-bold text-lg" required />
         </div>
         <input id="name" type="text" placeholder="Sender / Recipient Name" class="font-medium" required />
-        <textarea id="notes" placeholder="Optional notes or message..." rows="2" class="resize-none font-medium"></textarea>
+        <textarea id="notes" placeholder="Optional notes or message..." rows="2"
+          class="resize-none font-medium"></textarea>
         <button type="submit" class="btn w-full mt-2 py-4 text-[1.05rem]">Record Transaction</button>
       </form>
       <div class="h-5">
@@ -63,22 +78,26 @@
     </section>
 
     <!-- Stats & Chart Panel -->
-    <section class="glass-card panel-main flex flex-col justify-between animate-reveal delay-200 p-0 border-0 bg-transparent shadow-none backdrop-filter-none">
-      
+    <section
+      class="glass-card panel-main flex flex-col justify-between animate-reveal delay-200 p-0 border-0 bg-transparent shadow-none backdrop-filter-none">
+
       <!-- Stats Row -->
       <div id="summaryCards" class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-6">
-         <!-- Injected by JS -->
+        <!-- Injected by JS -->
       </div>
-      
+
       <!-- Chart and AI Block -->
       <div class="flex-1 flex flex-col md:flex-row gap-6">
-        
+
         <div class="glass-card flex-1 flex flex-col items-center justify-center relative min-h-[300px] w-full p-8">
-          <h2 class="absolute top-6 left-6 text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--text-muted)]">Balance Breakdown</h2>
+          <h2 class="absolute top-6 left-6 text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--text-muted)]">
+            Balance Breakdown</h2>
           <div class="w-full max-w-[280px] sm:max-w-[320px] relative z-10">
             <canvas id="breakdownChart"></canvas>
           </div>
-          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[var(--primary)] blur-[100px] opacity-20 rounded-full pointer-events-none"></div>
+          <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[var(--primary)] blur-[100px] opacity-20 rounded-full pointer-events-none">
+          </div>
         </div>
 
       </div>
@@ -86,13 +105,20 @@
 
     <!-- History Panel -->
     <section class="glass-card panel-full animate-reveal delay-300 mt-2">
-      <div class="flex items-center justify-between mb-8 px-2">
+      <div class="flex items-center justify-between mb-8 px-3">
         <h2 class="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--text-muted)]">Log History</h2>
       </div>
-      <div class="table-container pb-2">
+      <div class="table-container pb-5">
         <table id="logTable" class="table">
           <thead>
-            <tr><th>Flow</th><th>Amount (PKR)</th><th>Name</th><th>Notes</th><th>Date</th><th class="w-10"></th></tr>
+            <tr>
+              <th style="width: 50px;">Flow</th>
+              <th style="width: 180px;">Amount (PKR)</th>
+              <th style="width: 180px;">Name</th>
+              <th style="width: 200px;">Notes</th>
+              <th style="width: 180px;">Date</th>
+              <th class="w-10"></th>
+            </tr>
           </thead>
           <tbody class="font-medium"></tbody>
         </table>
@@ -106,4 +132,5 @@
 
   <script type="module" src="script.js"></script>
 </body>
+
 </html>
