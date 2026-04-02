@@ -120,8 +120,8 @@ const renderChart = (rows, ctx) => {
       labels: ['Received', 'Sent'],
       datasets: [{
         data: [received, sent],
-        backgroundColor: ['#10b981', '#f43f5e'],
-        borderColor: [isDark ? '#020617' : '#ffffff', isDark ? '#020617' : '#ffffff'],
+        backgroundColor: ['#238636', '#da3633'],
+        borderColor: [isDark ? '#0d1117' : '#f6f3eb', isDark ? '#0d1117' : '#f6f3eb'],
         borderWidth: 4,
         borderRadius: 4,
         hoverOffset: 20
@@ -134,12 +134,12 @@ const renderChart = (rows, ctx) => {
         legend: { 
           display: true, 
           position: 'bottom',
-          labels: { color: isDark ? '#f8fafc' : '#0f172a', font: { family: 'Outfit', size: 13, weight: 'bold' }, padding: 20, usePointStyle: true, pointStyle: 'circle' }
+          labels: { color: isDark ? '#f0f6fc' : '#24292f', font: { family: 'Outfit', size: 13, weight: 'bold' }, padding: 20, usePointStyle: true, pointStyle: 'circle' }
         },
         tooltip: {
-          backgroundColor: isDark ? 'rgba(30, 41, 59, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-          titleColor: isDark ? '#f8fafc' : '#0f172a',
-          bodyColor: isDark ? '#94a3b8' : '#64748b',
+          backgroundColor: isDark ? 'rgba(22, 27, 34, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+          titleColor: isDark ? '#f0f6fc' : '#24292f',
+          bodyColor: isDark ? '#d4af37' : '#b5952f',
           borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
           borderWidth: 1,
           padding: 12,
@@ -200,7 +200,7 @@ const loadDashboard = async () => {
       tbody.innerHTML = lastData.map(item => `
         <tr class="group">
           <td>
-             <div class="w-9 h-9 rounded-[10px] flex items-center justify-center font-bold text-lg ${item.type === 'received' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'}">
+             <div class="w-9 h-9 rounded-[6px] flex items-center justify-center font-bold text-lg border border-[var(--border-color)] shadow-inner bg-[rgba(0,0,0,0.2)] ${item.type === 'received' ? 'text-[var(--success)]' : 'text-[var(--danger)]'}">
                 <span class="pb-0.5">${item.type === 'received' ? '↓' : '↑'}</span>
              </div>
           </td>
