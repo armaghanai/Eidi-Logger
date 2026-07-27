@@ -1,4 +1,4 @@
-# Eidi Logger ✨
+# Eidi Logger 
 
 A sleek, full-stack, end-to-end encrypted financial tracker designed to log Eidi (gifted money).
 
@@ -6,7 +6,7 @@ Built with **Vanilla JS**, **Tailwind CSS**, **Node.js (Express)**, and **Supaba
 
 ---
 
-## 🌟 Features
+## Features
 - **Premium UI/UX:** Stunning dark/light mode glassmorphism interface powered by Tailwind CSS and Chart.js.
 - **Secure Authentication:** Standard Email & Password authentication powered by Supabase Auth protocols.
 - **Transaction History:** Instantly add or delete entries. Balance, total received, and total sent metrics recalculate on the fly.
@@ -14,7 +14,7 @@ Built with **Vanilla JS**, **Tailwind CSS**, **Node.js (Express)**, and **Supaba
 - **Account Management:** Users can securely delete their own accounts and permanently wipe their data from the database.
 - **Serverless Ready:** Pre-configured `vercel.json` for instant 1-click deployment on Vercel's global edge network.
 
-## 🚀 Quick Start (Local Development)
+## Quick Start (Local Development)
 
 ### 1. Configure Environment
 Create a `.env` file in your root directory and populate it with your keys:
@@ -38,7 +38,7 @@ node server.js
 ```
 Open `http://localhost:4000` in your browser. You will be instantly routed to the secure authentication portal.
 
-## 🌐 Deploying to Vercel
+##  Deploying to Vercel
 This project is configured out-of-the-box for Vercel. 
 1. Install the Vercel CLI: `npm i -g vercel`
 2. Run `vercel` in your terminal.
